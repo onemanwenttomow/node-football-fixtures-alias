@@ -1,6 +1,8 @@
 var http = require("https");
 const chalk = require('chalk');
 const readline = require('readline');
+const cTable = require('console.table');
+
 
 const rl = readline.createInterface({ 
     input: process.stdin, 
@@ -34,7 +36,7 @@ rl.question(`Whose fixtures shall i look up? Chelsea, DAFC, or FC Union? \n`, an
         }
         nextFixtures.length === 0 && console.log(`Sorry, there are no upcoming fixtures for ${answer}`);
         if (userTeam !== 182) {
-            rl.close();
+            return rl.close();
         } 
         getDataFromApi(`/v2/leagueTable/754`, function(data) {
             const table = JSON.parse(data.toString()).api.standings[0];
@@ -44,9 +46,15 @@ rl.question(`Whose fixtures shall i look up? Chelsea, DAFC, or FC Union? \n`, an
 ------------------------------------------
                 `);
 
-            for (let i = 0; i < table.length; i++) {
-                console.log(chalk.blue(`${table[i].rank} \t`) + `${table[i].teamName.substring(0, 15)}\t\t ${table[i].points}`);
-            }
+            const mappedTable = table.map(r => {
+                return {
+                    pos: r.rank,
+                    team: r.teamName,
+                    points: r.points  
+                };
+            });
+
+            console.table(mappedTable);
             rl.close();
 
         });
