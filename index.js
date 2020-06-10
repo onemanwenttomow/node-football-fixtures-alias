@@ -39,9 +39,11 @@ function displayFixtures(data, userTeam, answer) {
     for (let i = 0; i < nextFixtures.length; i++) {
         const nextFixture = nextFixtures[i];
         const unFormattedDate = new Date(nextFixture.event_date);
-        const options = { month: "long", day: "numeric", year: "numeric" };
+        const options = { month: "long", day: "numeric" };
+        const timeOptions = { hour: 'numeric', minute: 'numeric'};
         const date = new Intl.DateTimeFormat("en-US", options).format(unFormattedDate);
-        console.log(chalk.blue(`${date}: \t`) + `${nextFixture.homeTeam.team_name} ${chalk.red.bold.bgWhite('v')} ${nextFixture.awayTeam.team_name}`);
+        const time = new Intl.DateTimeFormat("en-US", timeOptions).format(unFormattedDate);
+        console.log(chalk.blue(`${date} (${time}): \t`) + `${nextFixture.homeTeam.team_name} ${chalk.red.bold.bgWhite('v')} ${nextFixture.awayTeam.team_name}`);
     }
     nextFixtures.length === 0 && console.log(`Sorry, there are no upcoming fixtures for ${answer}`);
     
